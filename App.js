@@ -1,28 +1,42 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, TextComponent, View } from "react-native";
+import { useState } from "react";
+import { StyleSheet, Text, TextComponent, View, TextInput } from "react-native";
+// import { TextInput } from "react-native-web";
 
 export default function App() {
+  const [name, setName] = useState("John Doe");
+  const [age, setAge] = useState(19);
+  const [hobby, setHobby] = useState("Swimming");
+
   return (
     <View style={styles.container}>
-      <View style={styles.navBar}>
-        <Text style={{ fontWeight: "bold", fontFamily: "", fontSize: 20 }}>
-          <Text style={{ fontWeight: "200" }}>Data</Text> Idea
-        </Text>
-        <Text style={{ fontWeight: "bold", fontFamily: "", fontSize: 20 }}>
-          Menu
-        </Text>
-      </View>
+      <Text>Create Person </Text>
+      <Text>Name: </Text>
+      <TextInput
+        style={styles.input}
+        placeholder="eg John Doe"
+        onChangeText={(value) => setName(value)}
+      />
+
+      <Text>Age: </Text>
+      <TextInput
+        keyboardType="numeric"
+        style={styles.input}
+        placeholder="eg 19"
+        onChangeText={(value) => setAge(value)}
+      />
+
+      <Text>Hobby: </Text>
+      <TextInput
+        style={styles.input}
+        placeholder="eg Swimming"
+        onChangeText={(value) => setHobby(value)}
+      />
+
       <View>
-        <View style={styles.blueContainers}>
-          <Text style={styles.heading}>HTML</Text>
-          <Text style={styles.subheading}>
-            The language for building web pages
-          </Text>
-        </View>
-        <View>
-          <Text style={styles.greenButton}>Learn HTML</Text>
-          <Text style={styles.grayButton}>HTML Reference</Text>
-        </View>
+        <Text>Name: {name}</Text>
+        <Text>Age: {age}</Text>
+        <Text>Hobby: {hobby}</Text>
       </View>
       <StatusBar style="auto" />
     </View>
@@ -37,42 +51,12 @@ const styles = StyleSheet.create({
     padding: 20,
     margin: 20,
   },
-  navBar: {
-    display: "flex",
-    width: 400,
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    padding: 20,
-    color: "#fff",
-  },
-  blueContainer: {
-    backgroundColor: "152238",
-  },
-  greenButton: {
-    backgroundColor: "#228B22",
-    padding: 10,
-    margin: 10,
-    borderRadius: 10,
-    color: "#fff",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  grayButton: {
-    backgroundColor: "#ccc",
-    padding: 10,
-    margin: 10,
-    borderRadius: 10,
-    color: "#000",
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  heading: {
-    fontWeight: "bold",
-    textAlign: "center",
-    fontSize: 50,
-  },
-  subheading: {
-    fontWeight: "bold",
-    padding: 20,
+  input: {
+    borderWidth: 1,
+    borderStyle: "solid",
+    borderColor: "#777",
+    padding: 2,
+    borderRadius: 5,
+    width: 100,
   },
 });
