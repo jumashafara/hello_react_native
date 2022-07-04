@@ -3,16 +3,20 @@ import { useState } from "react";
 import {
   StyleSheet,
   Text,
-  TextComponent,
   View,
   TextInput,
   FlatList,
   TouchableOpacity,
   Button,
+  TextComponent,
 } from "react-native";
 
 export default function App() {
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState([
+    { title: "todo1", id: 1 },
+    { title: "todo2", id: 2 },
+  ]);
+  const [title, setTitle] = useState("");
 
   const createID = () => {
     let new_id = 1;
@@ -24,25 +28,37 @@ export default function App() {
     return new_id;
   };
 
-  const createTodo = (todoText) => {
-    setTodos(...{ title: todoText, id: createID() });
+  const createTodo = () => {
+    const new_todo = { title: title, id: createID() };
+    setTodos((old_todos) => [...old_todos, new_todo]);
   };
 
+  // Delete item
+  const deleteItem = (id) => {
+    setTodos((old_todos) => old_todos.filter((todo) => todo.id !== id));
+  };
   return (
     <View style={styles.container}>
+      <Text style={styles.heading}>Todos</Text>
+      <FlatList
+        data={todos}
+        renderItem={({ item }) => (
+          <Text style={styles.todo}>
+            <Text>{item.title}</Text>
+            <TouchableOpacity onPress={() => deleteItem(item.id)}>
+              <Text style={styles.clearButton}>clear</Text>
+            </TouchableOpacity>
+          </Text>
+        )}
+        keyExtractor={(item) => item.id}
+      />
       <View>
-        <View>
-          <Text>Todos</Text>
-          <View>
-            <FlatList data={todos} />
-          </View>
-        </View>
-        <Text>New Todo</Text>
+        <Text style={styles.heading}>Add Todo</Text>
         <TextInput
           style={styles.input}
-          onChangeText={(value) => createTodo(value)}
+          onChangeText={(value) => setTitle(value)}
         />
-        <Button title="Add Todo" />
+        <Button title="Add Todo" onPress={() => createTodo()} />
       </View>
       <StatusBar style="auto" />
     </View>
@@ -54,13 +70,32 @@ const styles = StyleSheet.create({
     display: "flex",
     backgroundColor: "152238",
     alignItems: "center",
-    padding: 20,
-    margin: 20,
+    marginVertical: 20,
   },
   input: {
     borderWidth: 2,
-    borderColor: "gray",
+    borderColor: "lightgray",
     padding: 10,
-    marginVertical: 20,
+    marginVertical: 10,
+    borderRadius: 5,
+  },
+  heading: {
+    fontWeight: "bold",
+    fontSize: 20,
+    padding: 10,
+    margin: 10,
+  },
+  todo: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 10,
+    borderWidth: 2,
+    borderColor: "lightgray",
+    width: 200,
+  },
+  clearButton: {
+    color: "darkred",
+    fontWeight: "700",
   },
 });
