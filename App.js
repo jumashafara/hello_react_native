@@ -40,18 +40,24 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text style={styles.heading}>Todos</Text>
-      <FlatList
-        data={todos}
-        renderItem={({ item }) => (
-          <Text style={styles.todo}>
-            <Text>{item.title}</Text>
-            <TouchableOpacity onPress={() => deleteItem(item.id)}>
-              <Text style={styles.clearButton}>clear</Text>
-            </TouchableOpacity>
-          </Text>
-        )}
-        keyExtractor={(item) => item.id}
-      />
+      {todos.length >= 1 ? (
+        <FlatList
+          data={todos}
+          renderItem={({ item }) => (
+            <View style={styles.todo}>
+              <Text>{item.title}</Text>
+              <TouchableOpacity onPress={() => deleteItem(item.id)}>
+                <Text style={styles.clearButton}>clear</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          keyExtractor={(item) => item.id}
+        />
+      ) : (
+        <View>
+          <Text>All clear, no todos to display!</Text>
+        </View>
+      )}
       <View>
         <Text style={styles.heading}>Add Todo</Text>
         <TextInput
@@ -75,15 +81,17 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 2,
     borderColor: "lightgray",
-    padding: 10,
+    padding: 5,
     marginVertical: 10,
     borderRadius: 5,
+    width: 200,
   },
   heading: {
     fontWeight: "bold",
     fontSize: 20,
     padding: 10,
     margin: 10,
+    textAlign: "center",
   },
   todo: {
     flex: 1,
