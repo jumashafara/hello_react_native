@@ -7,8 +7,8 @@ import {
   View,
   TextInput,
   FlatList,
+  TouchableOpacity,
 } from "react-native";
-// import { TextInput } from "react-native-web";
 
 export default function App() {
   const [fruits, setFruits] = useState([
@@ -17,18 +17,26 @@ export default function App() {
     { name: "cherries", id: 3 },
   ]);
 
+  const handlePress = (id) => {
+    setFruits((prevFruits) => {
+      return prevFruits.filter((fruit) => fruit.id !== id);
+    });
+  };
   return (
     <View style={styles.container}>
       <FlatList
         keyExtractor={(item) => item.id}
         data={fruits}
-        renderItem={({ item }) => <Text>{item.name}</Text>}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onPress={() => {
+              handlePress(item.id);
+            }}
+          >
+            <Text style={styles.listItem}>{item.name}</Text>
+          </TouchableOpacity>
+        )}
       />
-      {/* {fruits.map((fruit) => (
-        <View>
-          <Text>{fruit.name}</Text>
-        </View>
-      ))} */}
       <StatusBar style="auto" />
     </View>
   );
@@ -41,5 +49,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
     margin: 20,
+  },
+  listItem: {
+    padding: 10,
+    margin: 10,
+    backgroundColor: "pink",
   },
 });
