@@ -33,7 +33,9 @@ export default function App() {
       <View>
         <View>
           <Text>Todos</Text>
-          <View></View>
+          <View>
+            <FlatList data={todos} />
+          </View>
         </View>
         <Text>New Todo</Text>
         <TextInput
