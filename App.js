@@ -1,3 +1,4 @@
+import React from "react";
 import { StatusBar } from "expo-status-bar";
 import { useState } from "react";
 import {
@@ -10,6 +11,7 @@ import {
   Button,
   TextComponent,
 } from "react-native";
+import { Header } from "./src/components/Header";
 
 export default function App() {
   const [todos, setTodos] = useState([
@@ -25,6 +27,12 @@ export default function App() {
         new_id = new_id + 1;
       }
     });
+
+    // for (todo in todos) {
+    //   if (todo.id == new_id) {
+    //     new_id = new_id + 1;
+    //   }
+    // }
     return new_id;
   };
 
@@ -38,35 +46,39 @@ export default function App() {
     setTodos((old_todos) => old_todos.filter((todo) => todo.id !== id));
   };
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Todos</Text>
-      {todos.length >= 1 ? (
-        <FlatList
-          data={todos}
-          renderItem={({ item }) => (
-            <View style={styles.todo}>
-              <Text>{item.title}</Text>
-              <TouchableOpacity onPress={() => deleteItem(item.id)}>
-                <Text style={styles.clearButton}>clear</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-          keyExtractor={(item) => item.id}
-        />
-      ) : (
+    <View>
+      <Header />
+      <View style={styles.container}>
+        <Text style={styles.heading}>Todos</Text>
+        {todos.length >= 1 ? (
+          <FlatList
+            data={todos}
+            renderItem={({ item }) => (
+              <View style={styles.todo}>
+                <Text>{item.title}</Text>
+                {/* <Text>{item.id}</Text> */}
+                <TouchableOpacity onPress={() => deleteItem(item.id)}>
+                  <Text style={styles.clearButton}>clear</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+            keyExtractor={(item) => item.id}
+          />
+        ) : (
+          <View>
+            <Text>All clear, no todos to display!</Text>
+          </View>
+        )}
         <View>
-          <Text>All clear, no todos to display!</Text>
+          <Text style={styles.heading}>Add Todo</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={(value) => setTitle(value)}
+          />
+          <Button title="Add Todo" onPress={() => createTodo()} />
         </View>
-      )}
-      <View>
-        <Text style={styles.heading}>Add Todo</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(value) => setTitle(value)}
-        />
-        <Button title="Add Todo" onPress={() => createTodo()} />
+        <StatusBar style="auto" />
       </View>
-      <StatusBar style="auto" />
     </View>
   );
 }
@@ -76,21 +88,19 @@ const styles = StyleSheet.create({
     display: "flex",
     backgroundColor: "152238",
     alignItems: "center",
-    marginVertical: 20,
   },
   input: {
     borderWidth: 2,
     borderColor: "lightgray",
     padding: 5,
-    marginVertical: 10,
+    marginVertical: 8,
     borderRadius: 5,
     width: 200,
   },
   heading: {
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: 16,
     padding: 10,
-    margin: 10,
     textAlign: "center",
   },
   todo: {
