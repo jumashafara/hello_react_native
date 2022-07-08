@@ -9,9 +9,12 @@ import {
   FlatList,
   TouchableOpacity,
   Button,
-  TextComponent,
+  Alert,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { Header } from "./src/components/Header";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 export default function App() {
   const [todos, setTodos] = useState([
@@ -20,25 +23,34 @@ export default function App() {
   ]);
   const [title, setTitle] = useState("");
 
-  const createID = () => {
-    let new_id = 1;
-    todos.forEach((todo) => {
-      if (todo.id == new_id) {
-        new_id = new_id + 1;
-      }
-    });
+  // GENERATE RANDOM ID
+  // const createID = () => {
+  //   let new_id = 1;
+  //   todos.forEach((todo) => {
+  //     if (todo.id == new_id) {
+  //       new_id = new_id + 1;
+  //     }
+  //   });
 
-    // for (todo in todos) {
-    //   if (todo.id == new_id) {
-    //     new_id = new_id + 1;
-    //   }
-    // }
-    return new_id;
-  };
+  //   // for (todo in todos) {
+  //   //   if (todo.id == new_id) {
+  //   //     new_id = new_id + 1;
+  //   //   }
+  //   // }
+  //   return new_id;
+  // };
 
   const createTodo = () => {
-    const new_todo = { title: title, id: createID() };
-    setTodos((old_todos) => [...old_todos, new_todo]);
+    if (title.length > 2) {
+      const new_todo = { title: title, id: Math.random() };
+      setTodos((old_todos) => [...old_todos, new_todo]);
+    } else {
+      Alert.alert("OOPS!", "Todos must be more than 2 characters long", [
+        {
+          text: "Unserstood",
+        },
+      ]);
+    }
   };
 
   // Delete item
@@ -46,40 +58,46 @@ export default function App() {
     setTodos((old_todos) => old_todos.filter((todo) => todo.id !== id));
   };
   return (
-    <View>
-      <Header />
-      <View style={styles.container}>
-        <Text style={styles.heading}>Todos</Text>
-        {todos.length >= 1 ? (
-          <FlatList
-            data={todos}
-            renderItem={({ item }) => (
-              <View style={styles.todo}>
-                <Text>{item.title}</Text>
-                {/* <Text>{item.id}</Text> */}
-                <TouchableOpacity onPress={() => deleteItem(item.id)}>
-                  <Text style={styles.clearButton}>clear</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-            keyExtractor={(item) => item.id}
-          />
-        ) : (
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View>
+        <Header />
+        <View style={styles.container}>
           <View>
-            <Text>All clear, no todos to display!</Text>
+            <Text style={styles.heading}>Add Todo</Text>
+            <TextInput
+              style={styles.input}
+              onChangeText={(value) => setTitle(value)}
+            />
+            <Button title="Add Todo" onPress={() => createTodo()} />
           </View>
-        )}
-        <View>
-          <Text style={styles.heading}>Add Todo</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={(value) => setTitle(value)}
-          />
-          <Button title="Add Todo" onPress={() => createTodo()} />
+          <Text style={styles.heading}>Todos</Text>
+          {todos.length >= 1 ? (
+            <FlatList
+              data={todos.reverse()}
+              renderItem={({ item }) => (
+                <View style={styles.todo}>
+                  <Text>{item.title}</Text>
+                  <TouchableOpacity onPress={() => deleteItem(item.id)}>
+                    <MaterialIcons
+                      name="delete-forever"
+                      color={"darkred"}
+                      size={16}
+                    />
+                  </TouchableOpacity>
+                </View>
+              )}
+              keyExtractor={(item) => item.id}
+            />
+          ) : (
+            <View>
+              <Text>All clear, no todos to display!</Text>
+            </View>
+          )}
+
+          <StatusBar style="auto" />
         </View>
-        <StatusBar style="auto" />
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
